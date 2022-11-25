@@ -55,54 +55,57 @@ export const userStickerService = {
 	async raffle(req: Request, res: Response) {
 		const { id: userId } = req.params
 
-		const user = await userController.showById(userId)
-
-		if (user.packages <= 0) {
-			return res.status(500).json({ message: 'Unknown error.' })
-		}
-
-		await userController.update({ _id: userId }, { packages: user.packages - 1 })
-
-		const possibleStickers = await stickerController.index()
-
-		const legend = possibleStickers.filter((sticker: any) => sticker.legend)
-		const comum = possibleStickers.filter((sticker: any) => !sticker.legend)
-
-		const stickerProbability = []
-
-		for (let i = 0; i < 5; i++) {
-			stickerProbability.push(...comum)
-		}
-
-		stickerProbability.push(...legend)
-
-		for (let i = 0; i < 3; i++) {
-			const stickerPrize =
-				stickerProbability[randomIntFromInterval(0, stickerProbability.length - 1)]
-			const alreadyHas = await userStickerController.show({
-				user: userId,
-				sticker: stickerPrize._id
-			})
-
-			if (alreadyHas) {
-				await userStickerController.update(
-					{ user: userId, sticker: stickerPrize._id },
-					{ quantity: alreadyHas.quantity + 1 }
-				)
-			} else {
-				await userStickerController.create({
-					user: userId,
-					sticker: stickerPrize._id,
-					quantity: 1,
-					sticky: false
-				})
-			}
-		}
-
 		try {
-			const sticker = await userStickerController.update({ user: userId })
+			const user = await userController.showById(userId)
 
-			return res.status(200).json(sticker)
+			if (user.packages <= 0) {
+				return res.status(500).json({ message: 'Unknown error.' })
+			}
+
+			await userController.update({ _id: userId }, { packages: user.packages - 1 })
+
+			const possibleStickers = await stickerController.index()
+
+			const legend = possibleStickers.filter((sticker: any) => sticker.legend)
+			const comum = possibleStickers.filter((sticker: any) => !sticker.legend)
+
+			const stickerProbability = []
+
+			for (let i = 0; i < 5; i++) {
+				stickerProbability.push(...comum)
+			}
+
+			stickerProbability.push(...legend)
+
+			const prized = []
+
+			for (let i = 0; i < 3; i++) {
+				let prize
+				const stickerPrize =
+					stickerProbability[randomIntFromInterval(0, stickerProbability.length - 1)]
+				const alreadyHas = await userStickerController.show({
+					user: userId,
+					sticker: stickerPrize._id
+				})
+
+				if (alreadyHas) {
+					prize = await userStickerController.update(
+						{ user: userId, sticker: stickerPrize._id },
+						{ quantity: alreadyHas.quantity + 1 }
+					)
+				} else {
+					prize = await userStickerController.create({
+						user: userId,
+						sticker: stickerPrize._id,
+						quantity: 1,
+						sticky: false
+					})
+				}
+
+				prized.push(prize)
+			}
+
+			return res.status(200).json(prized)
 		} catch {
 			return res.status(500).json({ message: 'Unknown error.' })
 		}
