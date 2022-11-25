@@ -46,12 +46,9 @@ export const userService = {
 
 	async addPackage(req: Request, res: Response) {
 		const { id } = req.params
-		console.log(id)
 
 		try {
 			const user = await userController.showById(id)
-
-			console.log(user)
 
 			const updateUser = await userController.update({ _id: id }, { packages: user.packages + 1 })
 

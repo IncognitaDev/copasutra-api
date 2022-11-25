@@ -29,6 +29,16 @@ export const userStickerService = {
 		return res.status(200).json(sticker)
 	},
 
+	async listUserSticker(req: Request, res: Response) {
+		const { id } = req.params
+
+		const sticker = await userStickerController.show({ user: id })
+
+		if (!sticker) return res.status(404).json({ message: 'sticker not found.' })
+
+		return res.status(200).json(sticker)
+	},
+
 	async showWhoAmI(req: Request, res: Response) {
 		const { stickerId } = req.body
 
@@ -116,7 +126,10 @@ export const userStickerService = {
 	},
 
 	async listChange(req: Request, res: Response) {
-		const changePossible = await userStickerController.show({ change: true, legend: false })
+		const changePossible = await userStickerController.showMany(
+			{ change: true, quantity: { $gt: 1 } },
+			['sticker', 'user']
+		)
 
 		if (!changePossible) return res.status(404).json({ message: 'stickers not found.' })
 
