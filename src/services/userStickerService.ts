@@ -32,7 +32,7 @@ export const userStickerService = {
 	async listUserSticker(req: Request, res: Response) {
 		const { id } = req.params
 
-		const sticker = await userStickerController.showMany({ user: id })
+		const sticker = await userStickerController.showMany({ user: id }, ['sticker'])
 
 		if (!sticker) return res.status(404).json({ message: 'sticker not found.' })
 
