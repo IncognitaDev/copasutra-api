@@ -112,7 +112,9 @@ export const userStickerService = {
 					})
 				}
 
-				prized.push(prize)
+				const fullPrize = await userStickerController.show({ _id: prize.id }, ['sticker'])
+
+				prized.push(fullPrize)
 			}
 
 			return res.status(200).json(prized)
