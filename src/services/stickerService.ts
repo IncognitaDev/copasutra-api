@@ -4,7 +4,7 @@ import { stickerController } from '../db/controllers/stickerController'
 export const stickerService = {
 	async index(_req: Request, res: Response) {
 		try {
-			const stickers = await stickerController.index({}, ['team'])
+			const stickers = await stickerController.index({})
 
 			return res.status(200).json({ message: 'success', stickers })
 		} catch (err) {

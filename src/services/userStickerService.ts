@@ -11,7 +11,7 @@ function randomIntFromInterval(min, max) {
 export const userStickerService = {
 	async index(_req: Request, res: Response) {
 		try {
-			const stickers = await userStickerController.index({}, ['team'])
+			const stickers = await userStickerController.index({})
 
 			return res.status(200).json({ message: 'success', stickers })
 		} catch (err) {
@@ -52,6 +52,7 @@ export const userStickerService = {
 	async update(req: Request, res: Response) {
 		const { id } = req.params
 		const stickerUpdateData = req.body
+		console.log(stickerUpdateData)
 
 		try {
 			const sticker = await userStickerController.update({ _id: id }, stickerUpdateData)

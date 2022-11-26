@@ -7,9 +7,9 @@ userStickerRoutes.get('/', userStickerService.index)
 userStickerRoutes.post('/', userStickerService.create)
 userStickerRoutes.get('/change', userStickerService.listChange)
 userStickerRoutes.put('/change', userStickerService.realizeChange)
-userStickerRoutes.get('/user/:id', userStickerService.listUserSticker)
 userStickerRoutes.get('/:id', userStickerService.show)
 userStickerRoutes.put('/:id', userStickerService.update)
+userStickerRoutes.get('/user/:id', userStickerService.listUserSticker)
 userStickerRoutes.get('/raffle/:id', userStickerService.raffle)
 
 export { userStickerRoutes }

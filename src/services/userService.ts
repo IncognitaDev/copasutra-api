@@ -4,7 +4,7 @@ import { userController } from '../db/controllers/userController'
 export const userService = {
 	async index(_req: Request, res: Response) {
 		try {
-			const users = await userController.index({}, ['team'])
+			const users = await userController.index({})
 
 			return res.status(200).json({ message: 'success', users })
 		} catch (err) {
